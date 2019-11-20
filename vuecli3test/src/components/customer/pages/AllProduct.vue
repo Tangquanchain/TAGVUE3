@@ -212,6 +212,7 @@ $black: #000;
 }
 
 .select_menu {
+  
   position: sticky;
   top: 100px;
 
@@ -264,7 +265,7 @@ $black: #000;
 .right_side_shop {
   width: 70.33333%;
   height: 100%;
-  border: 3px solid #1c1e1b;
+  // border: 3px solid #1c1e1b;
   padding: 30px 30px 20px 30px;
   margin-bottom: 20px;
 }
@@ -316,12 +317,13 @@ $black: #000;
 
   .right_side_shop {
     width: 89.33333% !important;
-    height: 9200px;
+    // height: 9200px;
     margin: auto;
   }
 }
 
 .newproduct {
+    border: 3px solid rgba(28, 30, 27,.9);
   p {
     font-size: 21px;
     font-family: "Open Sans", sans-serif;
