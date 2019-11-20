@@ -39,6 +39,6 @@ export default {
 }
 
 .wrap.active {
-  transform: translateX(450px) ;
+  transform: translateX(-450px) !important;
 }
 </style>

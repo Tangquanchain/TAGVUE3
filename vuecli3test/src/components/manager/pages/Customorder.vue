@@ -253,7 +253,6 @@ export default {
       const vm = this;
       vm.isLoading = true;
       this.$http.get(api).then(response => {
-        console.log(response.data);
         vm.isLoading = false;
         vm.products = response.data.products;
       });
@@ -265,7 +264,6 @@ export default {
       vm.status.loadingItem = id;
       this.$http.get(api).then(response => {
         $("#ProductModal").modal("show");
-        console.log(response.data);
         vm.status.loadingItem = "";
         vm.product = response.data.product;
         vm.product.num = 1;
@@ -282,7 +280,6 @@ export default {
       };
       this.$http.post(api, { data: cart }).then(response => {
         $("#ProductModal").modal("hide");
-        console.log(response.data);
         vm.getCart();
         vm.status.loadingItem = "";
       });
@@ -294,7 +291,6 @@ export default {
       this.$http.get(api).then(response => {
         vm.isLoading = false;
         vm.carts = response.data.data.carts;
-        console.log(vm.carts);
         vm.cartTotal = response.data.data.total;
         vm.cartFinal_Total = response.data.data.final_total;
       });
@@ -316,10 +312,8 @@ export default {
       const coupon = {
         code: vm.coupon_code
       };
-      console.log(coupon);
       this.$http.post(api, { data: coupon }).then(response => {
         vm.getCart();
-        console.log(response);
         vm.isLoading = false;
       });
     },
@@ -330,10 +324,9 @@ export default {
       this.$validator.validate().then(result => {
         if (result) {
           this.$http.post(api, { data: vm.form }).then(response => {
-            console.log("訂單已建立", response);
             // vm.isLoading = false;
             if (response.data.success) {
-              vm.$router.push(`/custom_checkout/${response.data.orderId}`);
+              vm.$router.push(`/admin/custom_checkout/${response.data.orderId}`);
             }
           });
         } else {

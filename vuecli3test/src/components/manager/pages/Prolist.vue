@@ -52,7 +52,6 @@ export default {
       const vm = this;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/orders?page=${page}`;
       this.$http.get(api).then(response => {
-        console.log(response.data);
         vm.prodata = response.data.orders;
         vm.pagination = response.data.pagination;
       });

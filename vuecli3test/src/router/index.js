@@ -12,14 +12,10 @@ const routes = [
     name: "home",
     component: () => import("@/views/customer/Homeheader.vue")
   },
+  //將前台作為預設首頁
   {
     path: "*", //*代表任意值
-    redirect: "/login" //使用 redirect 是將用戶導回正確的路徑 ，避免用戶進入不存在的頁面
-  },
-  {
-    name: "Login", //元件呈現的名稱
-    path: "/login", //對應的虛擬路徑
-    component: () => import("@/views/manager/Login.vue")
+    redirect: "/home" //使用 redirect 是將用戶導回正確的路徑 ，避免用戶進入不存在的頁面
   },
 
   //customer路由
@@ -68,6 +64,11 @@ const routes = [
 
   //manager路由
   {
+    name: "Login", //元件呈現的名稱
+    path: "/login", //對應的虛擬路徑
+    component: () => import("@/views/manager/Login.vue")
+  },
+  {
     name: "Dashboard",
     path: "/dashboard",
     component: () => import("@/views/manager/Dashboard.vue"),
@@ -95,7 +96,7 @@ const routes = [
 
   {
     name: "admin",
-    path: "/",
+    path: "/admin",
     component: () => import("@/views/manager/Dashboard.vue"),
     children: [
       {

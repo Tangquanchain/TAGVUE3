@@ -22,10 +22,10 @@
       </router-link>
       <!-- 手機管理 -->
       <div class="d-md-none">
-        <a @click.prevent="managerurl" class="nav-link text-dark order-md-1" href="#">
+        <a @click.prevent="OrderBtn" class="nav-link text-dark order-md-1" href="#">
           <i
             aria-hidden="true"
-            class="fas fa-user-cog align-baseline text-white"
+            class="far fa-edit align-baseline text-white"
             style="font-size: 26px;"
           ></i>
         </a>
@@ -45,7 +45,7 @@
           </li>
           <li class="nav-item">
             <a
-              @click="managerurl"
+              @click.prevent="OrderBtn"
               class="nav-item nav-link text-white mr-5 font-weight-bold d-sm-block d-md-none"
             >
               <i
@@ -60,8 +60,20 @@
         <ul class="navbar-nav cartbrowser ml-auto">
           <li class="nav-item d-flex">
             <!-- 網頁購物車 -->
+            <a
+              class="nav-link text-dark"
+              style="cursor:pointer"
+              data-toggle="modal"
+              data-target="#orderModal"
+            >
+              <i
+                class="far fa-edit align-baseline text-white"
+                aria-hidden="true"
+                style="font-size:26px"
+              ></i>
+            </a>
             <div style="positon:relative">
-              <a @click.prevent="getCartScreen" class="nav-link text-dark order-md-1 mr-5" href="#">
+              <a @click.prevent="getCartScreen" class="nav-link text-dark ml-4" href="#">
                 <i
                   class="fa fa-shopping-bag align-baseline text-white"
                   aria-hidden="true"
@@ -75,17 +87,6 @@
                 </span>
               </a>
             </div>
-            <a
-              class="nav-link text-dark order-md-2"
-              @click.prevent="managerurl"
-              style="cursor:pointer"
-            >
-              <i
-                class="fas fa-user-cog align-baseline text-white"
-                aria-hidden="true"
-                style="font-size:26px"
-              ></i>
-            </a>
           </li>
         </ul>
         <div class="cart-modal" @click="removeScreen"></div>
@@ -97,7 +98,10 @@
         <div class="row">
           <div class="top_side col-12">
             <div class="d-flex justify-content-center align-items-center py-4">
-              <P>FERR DISCOUNT CODE FOR <strong class="text-success">Tom1111</strong> </P>
+              <P>COPY DISCOUNT CODE</P>
+              <button @click="BtnCoupon" class="btn btn-coupon" data-clipboard-text="Tom1111">
+                <strong class="text-success orderquestion-flash">Tom1111</strong>
+              </button>
             </div>
           </div>
           <div class="left_side col-6">
@@ -117,6 +121,76 @@
         </div>
       </div>
     </div>
+
+    <!-- 訂單查詢 Modal -->
+    <AlertConpon />
+    <div
+      class="modal fade"
+      id="orderModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 768px;">
+        <div class="modal-content bg-dark">
+          <button
+            type="button"
+            class="btn modal-close position-absolute rounded-circle"
+            style="top: -15px; right: -25px;"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <i class="fas fa-times position-absolute text-white" style="bottom: 3px; right: 7px;"></i>
+          </button>
+          <div class="row">
+            <div class="col-6">
+              <img
+                src="https://images.unsplash.com/photo-1559895166-835a49fb90d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60"
+                alt
+              />
+            </div>
+
+            <div class="col-6" style="background-color:#212529;">
+              <div class="row h-100 align-items-center">
+                <div class="col-12">
+                  <div class="modal-title text-center h1 text-white">ORDER SERCH</div>
+                </div>
+                <div class="col-12">
+                  <div class="modal-body">
+                    <div class="form-group text-center">
+                      <label class for="ordernumber"></label>
+                      <input
+                        type="text"
+                        name="ordernum"
+                        class="form-control p-2 form-input rounded-0"
+                        :class="{'is-invalid':errors.has('ordernum')}"
+                        id="ordernumber"
+                        v-model="number"
+                        v-validate="'required'"
+                        placeholder="Order Number"
+                      />
+                      <span class="text-danger" v-if="errors.has('ordernum')">about 20 words</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="modal-footer border-0 justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-serch text-white"
+                      style="font-size:30px"
+                      @click.prevent="OrderBtn"
+                    >SERCH</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -125,30 +199,51 @@
 
 <script>
 import AlertCart from "./AlertCartMessage";
+import AlertConpon from "../customer/AlertCoupon";
 import $ from "jquery";
 export default {
   components: {
-    AlertCart
+    AlertCart,
+    AlertConpon
   },
   data() {
     return {
       isLoading: false,
       cartProduct: [],
       cartLength: "",
-      cartTotal: ""
+      cartTotal: "",
+      number: "", //order number
+      order: []
     };
   },
   methods: {
+    getOrder() {
+      const vm = this;
+      const orderList = new Set();
+      for (let i = 1; i <= 10; i++) {
+        const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/orders`; //從後端取的orderId
+        this.$http.get(api).then(response => {
+          response.data.orders.forEach((item, i) => {
+            orderList.add(item.id);
+          });
+        });
+      }
+      vm.order = orderList;
+    },
+
     getProduct() {
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
       const vm = this;
       this.$http.get(api).then(response => {
         vm.cartProduct = response.data.data.carts;
         vm.cartTotal = response.data.data.total;
-        console.log(response.data.data);
         vm.$bus.$emit("cartnum:push", response.data.data.carts.length);
         vm.$bus.$emit("cartfinish:push", response.data.data.carts);
       });
+    },
+
+    BtnCoupon() {
+      this.$bus.$emit("coupon:push", "COPY");
     },
 
     getCartScreen() {
@@ -171,8 +266,18 @@ export default {
       $(".Screen-modal").toggleClass("cart-modal-open");
     },
 
-    managerurl() {
-      this.$router.push("/dashboard");
+    OrderBtn() {
+      const vm = this;
+      if (vm.number !== "") {
+        vm.order.forEach((item, i) => {
+          if (item == vm.number) {
+            this.$router.push(`/checkout/formdata/${vm.number}`);
+            $("#orderModal").modal("hide");
+          }
+        });
+      } else {
+        vm.$bus.$emit("coupon:push", "ERROR　NUMBER");
+      }
     },
 
     siderOpen() {
@@ -189,15 +294,19 @@ export default {
     }
   },
   created() {
-    this.getProduct();
+    $(function() {
+      new ClipboardJS(".btn-coupon");
+    }),
+      this.getProduct();
+    this.getOrder();
   }
 };
 </script>
 
 
 <style lang="scss">
-$side-header:#ececec;
-
+$side-header: #ececec;
+$white:#fff;
 
 .scrollClose {
   overflow-y: hidden;
@@ -219,6 +328,7 @@ $side-header:#ececec;
   // position: fixed;
   width: 100%;
   z-index: 999;
+  padding: 20px;
 }
 
 .navbar-nav li a {
@@ -296,7 +406,7 @@ $side-header:#ececec;
   display: block;
   width: 32px;
   height: 1.5px;
-  background-color: white;
+  background-color: $white;
   position: absolute;
   opacity: 1;
   left: 0px;
@@ -326,5 +436,86 @@ $side-header:#ececec;
 }
 .side_icon.animated > span:nth-child(3) {
   transform: rotate(-220deg);
+}
+
+//查詢訂單
+
+.modal-close {
+  width: 35px;
+  height: 35px;
+  background-color: rgb(27, 27, 27);
+  border: 5px double $white;
+  z-index: 101;
+}
+.position-absolute {
+  position: absolute !important;
+}
+
+.form-group {
+  .form-input {
+    background-color: #212529;
+    font-family: "Open Sans", sans-serif;
+    outline: none;
+    width: 100%;
+    border: 3px solid #35addc;
+  }
+
+  .form-input[placeholder] {
+    color: $white;
+  }
+
+  span {
+    font-family: "Open Sans", sans-serif;
+    font-size: 18px;
+  }
+}
+
+.btn-serch {
+  border: 1px solid $white;
+  background-color: rgb(27, 27, 27);
+  transition: all 0.3s;
+  font-weight: bold;
+  font-family: "Open Sans", sans-serif;
+  transition: all 0.3s;
+  &:hover {
+    background-color: $white;
+    color: rgb(27, 27, 27) !important;
+    border: 1px solid rgb(27, 27, 27);
+  }
+  &:focus {
+    display: none;
+  }
+}
+
+.btn-coupon {
+  strong {
+    font-size: 30px;
+  }
+  &:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.orderquestion-flash {
+  animation: orderquestion-flash 3.5s infinite;
+}
+
+@keyframes orderquestion-flash {
+  0% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

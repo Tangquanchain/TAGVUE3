@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     getCartNum(cartNum) {
-        console.log(cartNum);
+        // console.log(cartNum);
       this.CartNumber = cartNum;
     }
   },

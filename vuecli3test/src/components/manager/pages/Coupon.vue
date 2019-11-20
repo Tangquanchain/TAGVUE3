@@ -174,7 +174,6 @@ export default {
         vm.isLoading = false;
         vm.coupon_code = response.data.coupons;
         vm.pagination = response.data.pagination;
-        console.log(vm.coupon_code);
       });
     },
     openCoupon(isNew, items) {
@@ -184,15 +183,6 @@ export default {
       } else {
         this.tempProducts = Object.assign({}, items);
         this.isNew = false;
-        //調整日期格式 //*1000原因是timestamp取得的是秒數，javaScript中要帶入的是毫秒
-        // const month = new Date(items.due_date * 1000).getMonth() < 9
-        //     ? "0" + (new Date(items.due_date * 1000).getMonth() + 1)
-        //     : new Date(items.due_date * 1000).getMonth() + 1;
-        // const date = new Date(items.dut_date * 1000).getDate() < 10
-        //     ? "0" + new Date(items.due_date * 1000).getDate()
-        //     : new Date(items.due_date * 1000).getDate();
-        // this.tempProducts.due_date = `${new Date(items.due_date * 1000).getFullYear()}-${month}-${date}`;
-        console.log(this.tempProducts.due_date);
       }
       $("#ProductModal").modal("show");
     },
@@ -203,47 +193,37 @@ export default {
       const timestamp = new Date(vm.tempProducts.due_date); //獲取timestamp時間
       // vm.tempProducts.due_date = timestamp.toISOString().replace("T", " ").substr(0, 10); //ISO格式
       vm.tempProducts.due_date = timestamp.toLocaleDateString().replace('/','-').replace('/','-');
-      // console.log(timestamp.toLocaleDateString());
-      // console.log(timestamp.toISOString());
       const postCoupon = vm.couponData;
       let httpMethod = "post";
-      console.log("判斷是建立新產品或編輯", vm.isNew);
       if (!vm.isNew) {
         //false變成true執行
         api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupon/${vm.tempProducts.id}`;
         httpMethod = "put";
       }
       this.$http[httpMethod](api, { data: vm.tempProducts }).then(response => {
-        console.log(response.data);
         if (response.data.success) {
           $("#ProductModal").modal("hide");
           vm.getCoupon();
         } else {
           $("#ProductModal").modal("hide");
           vm.getCoupon();
-          console.log("新增失敗");
         }
       });
     },
     delModal(items) {
-      console.log("this.tempProducts", this.tempProducts, "items", items);
       this.tempProducts = items; //將點到的地方傳入tempProducts來作為刪除的預備
-      // console.log(this.tempProducts);
       $("#delProductModal").modal("show"); //打開刪除模板
     },
     readydelModal() {
       let vm = this;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupon/${vm.tempProducts.id}`;
       this.$http.delete(api).then(response => {
-        console.log(response.data);
         if (response.data.success) {
           $("#delProductModal").modal("hide");
           vm.getCoupon(); //刪除了資料庫資料所以要重新抓取資料刷新
-          console.log("成功刪除");
         } else {
           $("#delProductModal").modal("hide");
           vm.getCoupon();
-          console.log("刪除失敗");
         }
       });
     }

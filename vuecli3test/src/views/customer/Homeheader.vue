@@ -87,7 +87,7 @@
                   <div class="product_guide text-dark text-center p-3">
                     <h3 class="mb-2">SELECT</h3>
                     <button
-                      class="btn btn-size pr-5 pl-5"
+                      class="btn btn-size pr-4 pl-4"
                       type="buttom"
                       @click="adddetail(items.id)"
                     >
@@ -179,7 +179,6 @@ export default {
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`;
       this.$http.get(api).then(response => {
         const newproduct = response.data.products;
-        console.log(newproduct);
         vm.Menproducts = newproduct.filter(item => {
           return item.category == "hotman";
         });
@@ -205,7 +204,6 @@ export default {
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
       const vm = this;
       this.$http.get(api).then(response => {
-        console.log(response.data.data.carts.length);
         vm.$bus.$emit("cartnum:push", response.data.data.carts.length);
       });
     },
@@ -214,7 +212,6 @@ export default {
       const vm = this;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${id}`;
       this.$http.get(api).then(response => {
-        console.log(response.data.product.id);
         if (response.data.success) {
           vm.$router.push(`/store/shopping_cart/${response.data.product.id}`);
         }
@@ -242,7 +239,7 @@ $white: #fff;
 }
 
 .wrap.active {
-  transform: translateX(450px);
+  transform: translateX(-450px) !important;
 }
 
 .img-container {

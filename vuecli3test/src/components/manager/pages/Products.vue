@@ -251,11 +251,9 @@ export default {
   methods: {
     getProducts(page = 1) {
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/products?page=${page}`;
-      // console.log('API伺服器路徑:'+process.env.APIPATH,'申請的APIPath:'+process.env.CUSTOMPATH);
       const vm = this;
       vm.isLoading = true;
       this.$http.get(api).then(response => {
-        console.log(response.data);
         vm.isLoading = false;
         vm.products = response.data.products;
         vm.pagination = response.data.pagination;
@@ -273,30 +271,25 @@ export default {
     },
     updateProduct() {
       let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product`;
-      // console.log('API伺服器路徑:'+process.env.APIPATH,'申請的APIPath:'+process.env.CUSTOMPATH);
       const vm = this;
       let httpMethod = "post";
-      console.log("判斷是建立新產品或編輯", vm.isNew);
       if (!vm.isNew) {
         //false變成true執行
         api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProducts.id}`;
         httpMethod = "put";
       }
       this.$http[httpMethod](api, { data: vm.tempProducts }).then(response => {
-        console.log(response.data);
         if (response.data.success) {
           $("#productsModal").modal("hide");
           vm.getProducts();
         } else {
           $("#productsModal").modal("hide");
           vm.getProducts();
-          console.log("新增失敗");
         }
       });
     },
 
     uploadFile() {
-      console.log(this);
       const uploadedFile = this.$refs.files.files[0]; //上傳到表單的圖片資料
       const vm = this;
       // const id = this.$refs.files.id;
@@ -311,7 +304,6 @@ export default {
           } //傳送「檔案」必須使用表單的格式，將格式改成form-data的格式
         })
         .then(response => {
-          console.log(response.data);
           vm.status.fileUploading = false;
           if (response.data.success) {
             // vm.tempProducts.imageUrl = response.data.imageUrl; //部分的變數如 imageUrl 由於 “未事先定義”所以需要使用 $set 的方式寫入
@@ -324,24 +316,19 @@ export default {
     },
 
     delModal(items) {
-      console.log("this.tempProducts", this.tempProducts, "items", items);
       this.tempProducts = items; //將點到的地方傳入tempProducts來作為刪除的預備
-      // console.log(this.tempProducts);
       $("#delProductModal").modal("show"); //打開刪除模板
     },
     readydelModal() {
       let vm = this;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProducts.id}`;
       this.$http.delete(api).then(response => {
-        console.log(response.data);
         if (response.data.success) {
           $("#delProductModal").modal("hide");
           vm.getProducts(); //刪除了資料庫資料所以要重新抓取資料刷新
-          console.log("成功刪除");
         } else {
           $("#delProductModal").modal("hide");
           vm.getProducts();
-          console.log("刪除失敗");
         }
       });
     }

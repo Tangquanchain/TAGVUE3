@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AlertConpon/>
+    <AlertConpon />
     <div class="mt-5 mb-5">
       <loading :active.sync="isLoading"></loading>
       <div class="container" style="border: 3px solid #1c1e1b;">
@@ -99,7 +99,7 @@
                     v-model="form.message"
                   ></textarea>
                 </div>
-                <div class="text-right">
+                <div class="text-right"  v-if="cartProduct != ''">
                   <button class="btn btn-continue text-white">CONTINUE</button>
                 </div>
               </form>
@@ -177,9 +177,10 @@
 </template>
 
 <script>
-import AlertConpon from '../AlertCoupon';
+import AlertConpon from "../AlertCoupon";
+import AlertAside from "../AlertAside";
 export default {
-  components:{
+  components: {
     AlertConpon
   },
   data() {
@@ -209,7 +210,6 @@ export default {
         vm.cartProduct = response.data.data.carts;
         vm.cartTotal = response.data.data.total;
         vm.cartFinal_Total = response.data.data.final_total; //折扣後的價格
-        console.log(response.data.data);
         vm.$bus.$emit("cartnum:push", response.data.data.carts.length);
       });
     },
@@ -224,6 +224,7 @@ export default {
       this.$http.delete(api).then(() => {
         vm.isLoading = false;
         vm.getProduct();
+        vm.$bus.$emit("coupon:push", "Remove item");
       });
     },
     sendOrder() {
@@ -233,11 +234,9 @@ export default {
       this.$validator.validate().then(result => {
         if (result) {
           this.$http.post(api, { data: vm.form }).then(response => {
-            console.log("訂單已建立", response);
             // vm.isLoading = false;
             if (response.data.success) {
               const orderId = response.data.orderId;
-              console.log(response.data.orderId);
               vm.$router.push(`/checkout/formdata/${response.data.orderId}`);
             }
           });
@@ -253,12 +252,16 @@ export default {
       const coupon = {
         code: vm.coupon_code
       };
-      console.log(coupon);
       this.$http.post(api, { data: coupon }).then(response => {
+        if (response.data.success == true) {
           vm.getProduct();
-          console.log(response);
           vm.isLoading = false;
-          vm.$bus.$emit("coupon:push" , response.data.message);
+          vm.$bus.$emit("coupon:push", "Apply to success");
+        } else {
+          vm.isLoading = false;
+          vm.getProduct();
+          vm.$bus.$emit("coupon:push", "Can't find Coupon");
+        }
       });
     }
   },

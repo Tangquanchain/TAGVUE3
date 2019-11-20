@@ -35,13 +35,13 @@
             <div class="contact_page text-center">
               <ul class="list-unstyled">
                 <li class="pt-2 pb-2">
-                  <a href="#">
+                  <a href="#"  @click.prevent="AllProduct">
                     <span>Account</span>
                   </a>
                 </li>
                 <li class="pt-2 pb-2">
-                  <a href="#">
-                    <span>Cart</span>
+                  <a href="#" @click.prevent="Manager">
+                    <span>Manager</span>
                   </a>
                 </li>
                 <li class="pt-2 pb-2">
@@ -60,19 +60,19 @@
                   <li class="pt-2 pb-2">
                     <a href="#">
                       <img src="../../../static/images/fb_like.png" style="width:30px; height:30px;" />
-                      <span class="align-items-center">Facebook</span>
+                      <span class="ml-1">Facebook</span>
                     </a>
                   </li>
                   <li class="pt-2 pb-2">
                     <a href="#">
                       <img src="../../../static/images/line_like.png" style="width:30px; height:30px;" />
-                      <span>Line</span>
+                      <span class="ml-1">Line</span>
                     </a>
                   </li>
                   <li class="pt-2 pb-2">
                     <a href="#">
                       <img src="../../../static/images/twitter_like.png" style="width:30px; height:30px;" />
-                      <span>Twitter</span>
+                      <span class="ml-1">Twitter</span>
                     </a>
                   </li>
                 </ul>
@@ -93,7 +93,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    AllProduct(){
+      const vm =  this;
+      vm.$router.push("/store/allproduct");
+    },
+    Manager(){
+      const vm =  this;
+      vm.$router.push("/login");
+    }
+  }
+};
 </script>
 
 <style lang="scss">

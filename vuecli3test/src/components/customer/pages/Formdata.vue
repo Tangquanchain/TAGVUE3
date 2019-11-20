@@ -1,5 +1,6 @@
 <template>
   <div>
+    <AlertFinishOrder/>
     <div class="container mt-5 mb-5" style="border: 3px solid #1c1e1b;">
       <loading :active.sync="isLoading"></loading>
       <div class="row justify-content-center">
@@ -49,6 +50,20 @@
           <table class="table">
             <tbody>
               <tr>
+                <th width="100">Order id</th>
+                <td>
+                  {{ this.orderId }}
+                  <i
+                    class="far fa-question-circle text-warning ml-2 orderquestion-flash"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    data-html="true"
+                    title="<div>COPY</div>"
+                  ></i>
+                </td>
+              </tr>
+              <tr></tr>
+              <tr>
                 <th width="100">Email</th>
                 <td>{{ order.user.email }}</td>
               </tr>
@@ -83,7 +98,12 @@
 </template>
 
 <script>
+import $ from "jquery";
+import AlertFinishOrder from "../AlertFinishOrder";
 export default {
+  components:{
+    AlertFinishOrder
+  },
   data() {
     return {
       isLoading: false,
@@ -100,7 +120,6 @@ export default {
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${vm.orderId}`;
       this.$http.get(api).then(response => {
         vm.isLoading = false;
-        console.log(response.data);
         vm.order = response.data.order;
       });
     },
@@ -110,65 +129,106 @@ export default {
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${vm.orderId}`;
       this.$http.post(api).then(response => {
         if (response.data.success) {
+          $("AlertFinishOrder").addClass("active");
           vm.isLoading = false;
+          vm.$bus.$emit("finish:push", `Thanks for your shopping,your order is completed to be ready.`);
           vm.getOrder(); //付款完成後重新整理頁面來判斷是否付款
-          window.setTimeout( () =>{
+          window.setTimeout(() => {
             vm.$router.push("/checkout/complete");
-          },5000);
+          }, 15000);
         }
-        console.log(response.data);
-        console.log("付款成功");
       });
     },
+
+    copyId(id) {
+      var TextRange = document.createRange();
+
+      TextRange.selectNode(document.getElementById(id));
+
+      sel = window.getSelection();
+
+      sel.removeAllRanges();
+
+      sel.addRange(TextRange);
+
+      document.execCommand("copy");
+
+      alert("複製完成！"); //此行可加可不加
+    }
   },
   created() {
-    this.orderId = this.$route.params.orderId; //取得網址上orderId的參數
-    console.log(this.orderId);
+    $(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    }),
+      (this.orderId = this.$route.params.orderId); //取得網址上orderId的參數
     this.getOrder();
   }
 };
 </script>
 
 <style lang="scss">
-
-.breakcrumb::before{
-  width: 100%  !important;
+AlertFinishOrder.active{
+  display: block !important;
 }
 
-.breakcrumb-txt{
-    margin: 0 85px 0 85px !important;
+.breakcrumb::before {
+  width: 100% !important;
 }
 
-@media (max-width:1199px) {
-  .breakcrumb::before{
-  width: 90%  !important;
+.breakcrumb-txt {
+  margin: 0 85px 0 85px !important;
 }
-    .breakcrumb-txt{
+
+@media (max-width: 1199px) {
+  .breakcrumb::before {
+    width: 90% !important;
+  }
+  .breakcrumb-txt {
     margin: 0 62px 0 62px !important;
-}
+  }
 }
 
-
-@media (max-width:991px) {
-    .breakcrumb-txt{
+@media (max-width: 991px) {
+  .breakcrumb-txt {
     margin: 0 43px 0 43px !important;
-}
+  }
 }
 
-@media (max-width:767px) {
-    .breakcrumb-txt{
+@media (max-width: 767px) {
+  .breakcrumb-txt {
     margin: 0 88px 0 88px !important;
-}
+  }
 }
 
-
-@media (max-width:575px) {
-  .breakcrumb::before{
-  width: 70%  !important;
-}
-    .breakcrumb-txt{
+@media (max-width: 575px) {
+  .breakcrumb::before {
+    width: 70% !important;
+  }
+  .breakcrumb-txt {
     margin: 0 48px 0 46px !important;
-}
+  }
 }
 
+.orderquestion-flash {
+  animation: orderquestion-flash 4.2s infinite;
+  vertical-align: middle;
+}
+
+@keyframes orderquestion-flash {
+  0% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 </style>

@@ -6,10 +6,12 @@
       v-for="(item, i) in messages"
       :key="i"
     >
-      <strong class="text-center alert-txt cartProduct_txt">{{ item.message}}</strong>
-      <button type="button" class="close" @click="removeMessage(i)" aria-label="Close">
-        <span style="font-size:20px; color:#f31e1e" aria-hidden="true">&times;</span>
-      </button>
+      <div class="alert-outline">
+        <strong class="text-center alert-txt cartProduct_txt">{{ item.message}}</strong>
+        <button type="button" class="close" @click="removeMessage(i)" aria-label="Close">
+          <span style="font-size:20px; color:#000;" aria-hidden="true">&times;</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +46,7 @@ export default {
             vm.messages.splice(i, 1);
           }
         });
-      }, 2000);
+      }, 3000);
     }
   },
   created() {
@@ -53,7 +55,7 @@ export default {
     // 自定義名稱 'messsage:push'
     // message: 傳入參數
     // status: 樣式，預設值為 warning
-    vm.$bus.$on("coupon:push", (message, status = "dark") => {
+    vm.$bus.$on("finish:push", (message, status = "dark") => {
       vm.updateMessage(message, status);
     });
     // vm.$bus.$emit('message:push');
@@ -62,22 +64,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.coupon-alert {
-  position: fixed;
-  width: 250px;
-  top: 80px;
-  right: 0px;
-  z-index: 1100;
-}
 
 .alert {
-  background-color: rgba(236, 236, 236, 0.6);
-  border: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 100 !important;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.alert-outline {
+  position: fixed;
+  top: 30%;
+  padding: 55px;
+  background-color: #fff;
+  border-radius: 10px;
 }
 
 .alert-txt {
-  font-size: 20px;
+  font-size: 30px;
   font-family: "Anton", sans-serif;
-  color: #f31e1e;
+  color: #080808;
 }
 </style>

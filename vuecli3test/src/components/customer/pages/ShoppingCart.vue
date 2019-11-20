@@ -103,7 +103,6 @@ export default {
       vm.isLoading = true;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${id}`;
       this.$http.get(api).then(response => {
-        console.log(response.data);
         vm.AllProduct = response.data.product;
         vm.isLoading = false;
       });
@@ -117,7 +116,6 @@ export default {
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
       const vm = this;
       this.$http.get(api).then(response => {
-        console.log(response.data.data.carts.length);
         vm.$bus.$emit("cartnum:push", response.data.data.carts.length);
       });
     },
@@ -133,7 +131,6 @@ export default {
       this.$http.post(api, { data: cart }).then(response => {
         vm.isLoading = false;
         vm.status.loadingItem = "";
-        console.log("購物車編號數量", response.data.data); //不像get(api)回傳一[]就可以計算length
         if (response.data.success) {
           vm.$bus.$emit("cart:push");
           vm.getCartProduct();
@@ -151,7 +148,6 @@ export default {
       const vm = this;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${id}`;
       this.$http.get(api).then(response => {
-        console.log(response.data.product.id);
         if (response.data.success) {
           vm.$router.push(`/store/shopping_cart/${response.data.product.id}`);
         }
@@ -170,7 +166,6 @@ export default {
   created() {
     this.itemId = this.$route.params.itemId;
     this.getProduct(this.itemId);
-    console.log(this.itemId);
   }
 };
 </script>

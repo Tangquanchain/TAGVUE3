@@ -22,8 +22,16 @@
                 </li>
               </ul>
             </div>
-            <div class="d-flex justify-content-center mb-2">
-                <button @click="backtoproducts" class="btn-lg btn-size complete-btn-txt" style="border-radius:20px;">CONTINUE TO SHOPING</button>
+            <div class="d-flex justify-content-center">
+              <div class="d-flex justify-content-center mb-2 mr-1">
+              </div>
+              <div class="d-flex justify-content-center mb-2">
+                <button
+                  @click="backtoproducts"
+                  class="btn-lg btn-size complete-btn-txt"
+                  style="border-radius:20px;"
+                >CONTINUE TO SHOPING</button>
+              </div>
             </div>
           </div>
         </div>
@@ -34,18 +42,18 @@
 
 <script>
 export default {
-    methods: {
-        backtoproducts(){
-            const vm = this;
-            vm.$router.push("/store/AllProduct");
-        }
-    },
+  methods: {
+    backtoproducts() {
+      const vm = this;
+      vm.$router.push("/store/AllProduct");
+    }
+  }
 };
 </script>
 
-<style  lang="scss">
-$black:#000;
-$breakcrumb-color:rgba(221, 217, 217, 0.6);
+<style  lang="scss" scoped>
+$black: #000;
+$breakcrumb-color: rgba(221, 217, 217, 0.6);
 
 .breakcrumb {
   display: flex;
@@ -83,7 +91,7 @@ $breakcrumb-color:rgba(221, 217, 217, 0.6);
   border-color: $black;
   color: $black;
   span {
-    color:$black;
+    color: $black;
     font-size: 33px;
     font-weight: bold;
   }
@@ -107,8 +115,8 @@ $breakcrumb-color:rgba(221, 217, 217, 0.6);
   }
 }
 
-.complete-btn-txt{
-      font-family: "Anton", sans-serif;
-      border:none;
+.complete-btn-txt {
+  font-family: "Anton", sans-serif;
+  border: none;
 }
 </style>

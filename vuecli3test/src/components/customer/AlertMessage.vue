@@ -4,9 +4,8 @@
       :class="'alert-' + item.status"
       v-for="(item, i) in messages" :key="i">
       <strong class="alert-txt text-dark text-center"> Added {{ item.message.title }} X {{ qty }}</strong>
-     
       <button type="button" class="close" @click="removeMessage(i)" aria-label="Close">
-        <span class="text-dark" style="font-size:52px;" aria-hidden="true">&times;</span>
+        <span class="text-dark" style="font-size:20px;" aria-hidden="true">&times;</span>
       </button>
     </div>
   </div>
@@ -61,12 +60,12 @@ export default {
 };
 </script>
 
-<style scope>
+<style scoped>
 .message-alert {
   position: fixed;
   width: 450px;
   top: 0px;
-  left: 0px;
+  right: 0px;
   z-index: 1100;
 }
 

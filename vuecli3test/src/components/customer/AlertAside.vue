@@ -8,7 +8,7 @@
     >
       <strong class="text-center alert-txt cartProduct_txt">{{ item.message}}</strong>
       <button type="button" class="close" @click="removeMessage(i)" aria-label="Close">
-        <span style="font-size:20px; color:#f31e1e" aria-hidden="true">&times;</span>
+        <span style="font-size:20px; color:#faabab;" aria-hidden="true">&times;</span>
       </button>
     </div>
   </div>
@@ -44,7 +44,7 @@ export default {
             vm.messages.splice(i, 1);
           }
         });
-      }, 2000);
+      }, 1500);
     }
   },
   created() {
@@ -53,7 +53,7 @@ export default {
     // 自定義名稱 'messsage:push'
     // message: 傳入參數
     // status: 樣式，預設值為 warning
-    vm.$bus.$on("coupon:push", (message, status = "dark") => {
+    vm.$bus.$on("remove:push", (message, status = "dark") => {
       vm.updateMessage(message, status);
     });
     // vm.$bus.$emit('message:push');
@@ -64,8 +64,8 @@ export default {
 <style lang="scss" scoped>
 .coupon-alert {
   position: fixed;
-  width: 250px;
-  top: 80px;
+  width: 450px;
+  top: 0px;
   right: 0px;
   z-index: 1100;
 }
@@ -73,10 +73,11 @@ export default {
 .alert {
   background-color: rgba(236, 236, 236, 0.6);
   border: 0;
+  padding: 30px;
 }
 
 .alert-txt {
-  font-size: 20px;
+  font-size: 30px;
   font-family: "Anton", sans-serif;
   color: #f31e1e;
 }

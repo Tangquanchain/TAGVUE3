@@ -75,7 +75,6 @@ export default {
       const vm = this;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${vm.orderId}`;
       this.$http.get(api).then(response => {
-        console.log(response.data);
         vm.order = response.data.order;
       });
     },
@@ -86,14 +85,11 @@ export default {
         if (response.data.success) {
           vm.getOrder(); //付款完成後重新整理頁面來判斷是否付款
         }
-        console.log(response.data);
-        console.log("付款成功");
       });
     }
   },
   created() {
     this.orderId = this.$route.params.orderId; //取得網址上orderId的參數
-    console.log(this.orderId);
     this.getOrder();
   }
 };
