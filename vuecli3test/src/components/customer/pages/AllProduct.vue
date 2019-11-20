@@ -193,7 +193,7 @@ $black: #000;
   top: 100px;
   width: 26.66666%;
   height: 100vh;
-  padding: 0 40px 40px 40px;
+  padding: 30px 40px 40px 40px;
   .txt {
     li {
       margin-top: 1.5rem;
@@ -323,7 +323,7 @@ $black: #000;
 }
 
 .newproduct {
-    border: 3px solid rgba(28, 30, 27,.9);
+    border: 4px solid rgba(28, 30, 27,.9);
   p {
     font-size: 21px;
     font-family: "Open Sans", sans-serif;
